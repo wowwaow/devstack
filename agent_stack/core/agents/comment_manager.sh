@@ -2,6 +2,10 @@
 
 # Get the directory of this script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CORE_DIR="$(dirname "$SCRIPT_DIR")"
+
+# Set Python path to include core directory
+export PYTHONPATH="$CORE_DIR:$PYTHONPATH"
 
 # Import environment
 source "$SCRIPT_DIR/../config/environment.sh"
@@ -13,7 +17,7 @@ add_comment() {
     local comment="$3"
     local line_number="$4"
 
-    python3 - <<EOF
+    PYTHONPATH="$CORE_DIR" python3 - <<EOF
 from agents.comments import AgentCommentSystem
 acs = AgentCommentSystem()
 acs.add_comment("$agent_id", "$file_path", "$comment", ${line_number:-None})
@@ -24,7 +28,7 @@ EOF
 get_file_comments() {
     local file_path="$1"
 
-    python3 - <<EOF
+    PYTHONPATH="$CORE_DIR" python3 - <<EOF
 from agents.comments import AgentCommentSystem
 acs = AgentCommentSystem()
 comments = acs.get_file_comments("$file_path")
@@ -37,7 +41,7 @@ EOF
 get_agent_comments() {
     local agent_id="$1"
 
-    python3 - <<EOF
+    PYTHONPATH="$CORE_DIR" python3 - <<EOF
 from agents.comments import AgentCommentSystem
 acs = AgentCommentSystem()
 comments = acs.get_agent_comments("$agent_id")

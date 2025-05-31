@@ -1,3 +1,5 @@
+# Initialize agents package
+
 """
 AI Agent Stack - Core Agent System
 """
