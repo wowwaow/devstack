@@ -6,6 +6,10 @@ export DEVSTACK_DIR="${DEVSTACK_DIR:-$HOME/devstack}"
 export WARP_HOST_DIR="${WARP_HOST_DIR:-/mnt/host}"
 export WARP_SYSTEM_DIR="${WARP_SYSTEM_DIR:-$WARP_HOST_DIR/WARP_CURRENT}"
 
+# Agent comment system
+export AGENT_COMMENTS_DIR="$DEVSTACK_DIR/agent_stack/core/comments"
+export AGENT_COMMENTS_INDEX="$AGENT_COMMENTS_DIR/comment_index.json"
+
 # Rules directory
 export WARP_RULES_SOURCE="$DEVSTACK_DIR/agent_stack/core/rules"
 export WARP_RULES_PATTERN="*.md"
