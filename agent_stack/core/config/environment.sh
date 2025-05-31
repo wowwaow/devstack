@@ -1,11 +1,17 @@
 #!/bin/bash
 
-# Base directory configuration with defaults
+# Base environment setup
+export HOME="${HOME:-$(getent passwd $(whoami) | cut -d: -f6)}"
+export DEVSTACK_DIR="${DEVSTACK_DIR:-$HOME/devstack}"
 export WARP_HOST_DIR="${WARP_HOST_DIR:-/mnt/host}"
 export WARP_SYSTEM_DIR="${WARP_SYSTEM_DIR:-$WARP_HOST_DIR/WARP_CURRENT}"
 
-# Legacy compatibility
-export SYSTEM_DIR="$WARP_SYSTEM_DIR"
+# Rules directory
+export WARP_RULES_SOURCE="$DEVSTACK_DIR/agent_stack/core/rules"
+export WARP_RULES_PATTERN="*.md"
+
+# Ensure critical directories exist
+mkdir -p "$DEVSTACK_DIR/agent_stack/core/rules"
 
 # Primary directories
 export SYSTEM_COMMANDS_DIR="$SYSTEM_DIR/System Commands"

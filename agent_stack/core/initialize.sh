@@ -14,18 +14,37 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Function to check if environment variables are set
 check_environment() {
+    # Set HOME if not already set
+    if [[ -z "$HOME" ]]; then
+        export HOME="$(getent passwd $(whoami) | cut -d: -f6)"
+        echo "Setting HOME directory: $HOME"
+    fi
+
+    # Set up devstack directory
+    if [[ -z "$DEVSTACK_DIR" ]]; then
+        export DEVSTACK_DIR="$HOME/devstack"
+        echo "Setting DEVSTACK_DIR: $DEVSTACK_DIR"
+    fi
+
+    # Set up Warp directories
     if [[ -z "$WARP_HOST_DIR" ]]; then
         export WARP_HOST_DIR="/mnt/host"
         echo "Using default WARP_HOST_DIR: $WARP_HOST_DIR"
-    else
-        echo "Using WARP_HOST_DIR: $WARP_HOST_DIR"
     fi
 
     if [[ -z "$WARP_SYSTEM_DIR" ]]; then
         export WARP_SYSTEM_DIR="$WARP_HOST_DIR/WARP_CURRENT"
         echo "Using default WARP_SYSTEM_DIR: $WARP_SYSTEM_DIR"
-    else
-        echo "Using WARP_SYSTEM_DIR: $WARP_SYSTEM_DIR"
+    fi
+
+    # Ensure devstack directory exists
+    if [[ ! -d "$DEVSTACK_DIR" ]]; then
+        echo "Creating devstack directory structure..."
+        mkdir -p "$DEVSTACK_DIR/agent_stack/core/rules"
+        # Clone or copy necessary files
+        if [[ -d "$SCRIPT_DIR" && "$SCRIPT_DIR" != "$DEVSTACK_DIR/agent_stack/core" ]]; then
+            cp -r "$SCRIPT_DIR"/* "$DEVSTACK_DIR/agent_stack/core/"
+        fi
     fi
 }
 
