@@ -1,0 +1,16 @@
+{
+  "README.md": [
+    {
+      "agent_id": "test_agent",
+      "comment": "This is a test comment showing how agents can dynamically add insights",
+      "timestamp": "2025-05-31T18:47:15.974729",
+      "line_number": 1
+    },
+    {
+      "agent_id": "github_setup_agent",
+      "comment": "Repository has been successfully made public on GitHub. The comment system is now integrated with version control.",
+      "timestamp": "2025-05-31T19:00:44.247017",
+      "line_number": 1
+    }
+  ]
+}
