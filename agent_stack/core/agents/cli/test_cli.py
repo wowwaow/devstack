@@ -2,7 +2,13 @@
 
 import unittest
 import os
-from . import AgentCLI, get_agent_context
+import sys
+from pathlib import Path
+
+# Add the parent directory to Python path for imports
+sys.path.append(str(Path(__file__).parent.parent.parent.parent))
+
+from agent_stack.core.agents.cli import AgentCLI, get_agent_context
 
 class TestAgentCLI(unittest.TestCase):
     def setUp(self):
