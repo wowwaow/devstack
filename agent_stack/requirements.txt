@@ -1,0 +1,8 @@
+# Core dependencies
+pathlib>=1.0.1
+python-dotenv>=0.19.0  # For additional environment variable management
+pytest>=7.0.0  # For running tests
+pytest-cov>=3.0.0  # For test coverage reporting
+
+# Optional monitoring dependencies
+psutil>=5.8.0  # For system resource monitoring
