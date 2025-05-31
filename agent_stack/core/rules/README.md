@@ -124,3 +124,55 @@ Use the instance management utility for operations:
 4. Track resource usage
 5. Monitor task progress
 
+
+## 🔄 Automatic Git Sync and Rebuild
+
+The system automatically synchronizes with the devstack repository and rebuilds itself:
+
+### Auto-Sync Features
+- Hourly automatic sync with devstack repository
+- Automatic system rebuild on updates
+- Configuration preservation across updates
+- Seamless multi-machine deployment
+
+### Manual Sync
+```bash
+# Trigger manual sync
+$SYSTEM_DIR/core/sync_rules.sh
+```
+
+### Initial Setup
+The system automatically:
+1. Clones devstack repository
+2. Syncs rules and configuration
+3. Sets up automatic updates
+4. Configures environment
+5. Rebuilds system structure
+
+### Cross-Machine Deployment
+To deploy on a new machine:
+1. Set environment variables:
+   ```bash
+   export WARP_HOST_DIR="/desired/host/path"
+   export WARP_SYSTEM_DIR="/desired/system/path"
+   ```
+
+2. Run initial setup:
+   ```bash
+   ./core/initialize.sh
+   ```
+
+The system will:
+- Clone devstack repository
+- Configure automatic updates
+- Create directory structure
+- Set up monitoring
+- Enable automatic sync
+
+### Sync Configuration
+- Default sync: Hourly
+- Source: github.com/wowwaow/devstack
+- Target: $WARP_RULES_DIR
+- Backup: Automatic before sync
+- Rebuild: Automatic after sync
+
