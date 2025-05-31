@@ -1,3 +1,4 @@
+# AGENT[test_agent]: This is a test comment showing how agents can dynamically add insights
 # AI Agent Stack
 
 ## Overview
