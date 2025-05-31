@@ -1,0 +1,43 @@
+task_id: "TASK-2.2"
+name: "Essential Tools Build Scripts"
+type: "Build"
+priority: "Medium"
+status: "PENDING"
+phase: "BUILD"
+
+description: "Implementation of essential tool build scripts"
+
+dependencies:
+  - task_id: "TASK-2.1"
+    type: "requires"
+    description: "Requires build framework"
+
+components:
+  - name: "build_m4.sh"
+    description: "M4 build script"
+    location: "/home/ubuntu/lfsbuilder/scripts/essential_tools/"
+    
+  - name: "build_ncurses.sh"
+    description: "Ncurses build script"
+    location: "/home/ubuntu/lfsbuilder/scripts/essential_tools/"
+    
+  - name: "build_bash.sh"
+    description: "Bash build script"
+    location: "/home/ubuntu/lfsbuilder/scripts/essential_tools/"
+    
+  - name: "validation.sh"
+    description: "Build validation tools"
+    location: "/home/ubuntu/lfsbuilder/scripts/essential_tools/"
+
+validation_requirements:
+  - "M4 build verification"
+  - "Ncurses build check"
+  - "Bash build validation"
+  - "Tool integration testing"
+
+metadata:
+  last_updated: "2025-05-31T18:51:04Z"
+  assigned_to: "pending_assignment"
+  estimated_completion: null
+  progress_percentage: 0
+

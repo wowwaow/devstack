@@ -1,0 +1,50 @@
+dependency_types:
+  blocks:
+    description: "This task blocks the dependent task"
+    relationship: "blocker"
+    
+  requires:
+    description: "This task requires the dependent task"
+    relationship: "dependent"
+    
+  enhances:
+    description: "This task enhances the dependent task"
+    relationship: "enhancement"
+
+phase_dependencies:
+  phase1_environment:
+    - "Resource management setup"
+    - "Initial error handling"
+    
+  phase2_temp_tools:
+    requires:
+      - "phase1_environment"
+    provides:
+      - "Build tools"
+      - "Temporary system"
+    
+  phase3_system:
+    requires:
+      - "phase2_temp_tools"
+    provides:
+      - "Final system"
+      - "System tools"
+
+core_dependencies:
+  resource_management:
+    TASK-RM001:
+      blocks: ["TASK-EH002"]
+    TASK-RM002:
+      blocks: ["TASK-MT003"]
+    TASK-RM003:
+      blocks: ["TASK-MT001"]
+      
+  error_handling:
+    TASK-EH001:
+      blocks: ["TASK-EH003", "TASK-DOC003"]
+    TASK-EH002:
+      requires: ["TASK-RM001"]
+      blocks: ["TASK-EH003"]
+    TASK-EH003:
+      requires: ["TASK-EH001", "TASK-EH002"]
+

@@ -1,0 +1,43 @@
+task_id: "TASK-2.1"
+name: "Core Utilities Build Framework"
+type: "Infrastructure"
+priority: "High"
+status: "PENDING"
+phase: "BUILD"
+
+description: "Implementation of core build framework for utilities"
+
+dependencies:
+  - task_id: "TASK-1.4"
+    type: "requires"
+    description: "Requires completion of Phase 1"
+
+components:
+  - name: "build_template.sh"
+    description: "Build script template"
+    location: "/home/ubuntu/lfsbuilder/scripts/build_framework/"
+    
+  - name: "common_build_functions.sh"
+    description: "Shared functions"
+    location: "/home/ubuntu/lfsbuilder/scripts/build_framework/"
+    
+  - name: "progress_tracker.sh"
+    description: "Build progress monitoring"
+    location: "/home/ubuntu/lfsbuilder/scripts/build_framework/"
+    
+  - name: "checkpoint_system.sh"
+    description: "Build state management"
+    location: "/home/ubuntu/lfsbuilder/scripts/build_framework/"
+
+validation_requirements:
+  - "Template functionality verification"
+  - "Shared function testing"
+  - "Progress tracking validation"
+  - "Checkpoint system testing"
+
+metadata:
+  last_updated: "2025-05-31T18:51:04Z"
+  assigned_to: "pending_assignment"
+  estimated_completion: null
+  progress_percentage: 0
+

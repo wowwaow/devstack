@@ -1,0 +1,44 @@
+status_states:
+  pending:
+    description: "Task not yet started"
+    next_states: ["in_progress"]
+    
+  in_progress:
+    description: "Task currently being worked on"
+    next_states: ["completed", "blocked", "failed"]
+    
+  blocked:
+    description: "Task blocked by dependencies or issues"
+    next_states: ["in_progress", "failed"]
+    requires:
+      - "Blocking issue documentation"
+      - "Dependency status"
+    
+  failed:
+    description: "Task encountered critical failure"
+    next_states: ["in_progress"]
+    requires:
+      - "Failure analysis"
+      - "Recovery plan"
+    
+  completed:
+    description: "Task successfully completed"
+    next_states: ["in_progress"]  # Can be reopened if issues found
+    requires:
+      - "Validation checks"
+      - "Documentation updates"
+
+tracking_metadata:
+  required_fields:
+    - "status"
+    - "last_updated"
+    - "assigned_to"
+    - "priority"
+    - "phase"
+  
+  optional_fields:
+    - "progress_percentage"
+    - "estimated_completion"
+    - "notes"
+    - "blockers"
+

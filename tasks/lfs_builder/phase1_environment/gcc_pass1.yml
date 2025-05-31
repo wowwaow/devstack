@@ -1,0 +1,42 @@
+task_id: "TASK-1.4"
+name: "Cross-Toolchain Build - GCC Pass 1"
+type: "Build"
+priority: "High"
+status: "PENDING"
+phase: "INITIALIZATION"
+
+description: "Implementation of GCC Pass 1 build process"
+
+dependencies:
+  - task_id: "TASK-1.3"
+    type: "requires"
+
+components:
+  - name: "build_gcc_pass1.sh"
+    description: "Main GCC build script"
+    location: "/home/ubuntu/lfsbuilder/scripts/cross-tools/"
+    
+  - name: "check_prerequisites.sh"
+    description: "Dependency checker"
+    location: "/home/ubuntu/lfsbuilder/scripts/cross-tools/"
+    
+  - name: "patch_manager.sh"
+    description: "Patch handling"
+    location: "/home/ubuntu/lfsbuilder/scripts/cross-tools/"
+    
+  - name: "configure_gcc.sh"
+    description: "GCC configuration"
+    location: "/home/ubuntu/lfsbuilder/scripts/cross-tools/"
+
+validation_requirements:
+  - "Prerequisite verification"
+  - "Build process validation"
+  - "Patch application check"
+  - "Configuration validation"
+
+metadata:
+  last_updated: "2025-05-31T18:51:04Z"
+  assigned_to: "pending_assignment"
+  estimated_completion: null
+  progress_percentage: 0
+

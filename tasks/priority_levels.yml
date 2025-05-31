@@ -1,0 +1,33 @@
+priority_levels:
+  critical:
+    description: "Tasks that block major system functionality or are required for basic system operation"
+    criteria:
+      - "Blocks multiple dependent tasks"
+      - "Required for system stability"
+      - "Core functionality dependencies"
+    alert_level: "immediate"
+    
+  high:
+    description: "Tasks that significantly impact system functionality or build process"
+    criteria:
+      - "Direct impact on build process"
+      - "Required for system efficiency"
+      - "Important user-facing features"
+    alert_level: "high"
+    
+  medium:
+    description: "Tasks that enhance system functionality or improve user experience"
+    criteria:
+      - "System improvements"
+      - "Performance optimizations"
+      - "Secondary features"
+    alert_level: "normal"
+    
+  low:
+    description: "Tasks that are nice to have but not critical for system operation"
+    criteria:
+      - "Documentation updates"
+      - "Minor improvements"
+      - "Optional features"
+    alert_level: "low"
+
