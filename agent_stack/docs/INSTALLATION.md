@@ -1,168 +1,158 @@
-# AI Agent Stack Installation Guide
+# Warp Agent Stack Installation
 
-## System Requirements
-
-### Minimum Requirements
-- Python 3.8 or higher
-- 4GB RAM minimum (8GB recommended)
-- 2 CPU cores minimum (4 cores recommended)
-- 10GB available disk space
-- Linux-based operating system (Ubuntu 20.04+ recommended)
-
-### Python Dependencies
-```
-pip install -r requirements.txt
-```
+## Prerequisites
+- Linux/Unix environment
+- Bash shell
+- Git
 
 ## Installation Steps
 
-### 1. Clone the Repository
+1. Clone the repository:
 ```bash
 git clone https://github.com/wowwaow/devstack.git
 cd devstack/agent_stack
 ```
 
-### 2. Create Virtual Environment (Recommended)
+2. Configure Environment:
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Linux/Mac
-# or
-.\venv\Scripts\activate  # On Windows
+# Optional: Set custom base directories
+export WARP_HOST_DIR=/path/to/host/directory     # Default: /mnt/host
+export WARP_SYSTEM_DIR=/path/to/system/directory # Default: $WARP_HOST_DIR/WARP_CURRENT
+
+# Source the environment configuration
+source core/config/environment.sh
 ```
 
-### 3. Install Dependencies
+3. Initialize Directory Structure:
 ```bash
-pip install -r requirements.txt
+# Create required directories
+mkdir -p \
+  "$SYSTEM_COMMANDS_DIR" \
+  "$WORK_LOGS_DIR" \
+  "$SYSTEM_LOGS_DIR" \
+  "$WARP_RULES_DIR" \
+  "$CURRENT_OBJECTIVE_DIR" \
+  "$FUTURE_OBJECTIVES_DIR" \
+  "$PAST_OBJECTIVES_DIR" \
+  "$AGENT_STATUS_DIR" \
+  "$TASK_POOL_DIR" \
+  "$DEPENDENCIES_DIR" \
+  "$MISSING_TASKS_DIR" \
+  "$PROMOTION_QUEUE_DIR" \
+  "$TEMPLATES_DIR" \
+  "$ARCHIVE_DIR"
 ```
 
-### 4. Configure Environment
-1. Copy the example configuration:
+4. Initialize System Files:
 ```bash
-cp config/example.env .env
+# Create necessary system files
+touch \
+  "$MAIN_RULESET" \
+  "$SYSTEM_DOCUMENTATION" \
+  "$PATH_REGISTRY" \
+  "$TIDY_LOG" \
+  "$ORGANIZE_LOG" \
+  "$SYSTEM_STATUS" \
+  "$ANOMALY_LOG" \
+  "$SUPERVISOR_ALERTS" \
+  "$AGENT_REGISTRY" \
+  "$MISSING_TASKS_LOG" \
+  "$OBJECTIVE_PROMOTION_LOG" \
+  "$AGENT_TIMEOUT_LOG" \
+  "$TASK_REASSIGNMENT_LOG" \
+  "$HEARTBEAT_MONITOR"
 ```
 
-2. Edit the `.env` file with your settings:
-```env
-AGENT_STACK_HOME=./
-LOG_LEVEL=INFO
-MAX_AGENTS=5
-HEARTBEAT_INTERVAL=120
-SOFT_TIMEOUT=300
-HARD_TIMEOUT=600
-CRITICAL_TIMEOUT=900
-```
+## Configuration Options
 
-### 5. Initialize System Structure
+### Custom Installation Paths
+You can customize the installation location by setting environment variables before sourcing the configuration:
+
 ```bash
-python scripts/initialize_system.py
+# Example: Custom host directory
+export WARP_HOST_DIR=/custom/host/path
+source core/config/environment.sh
+
+# Example: Custom system directory
+export WARP_SYSTEM_DIR=/custom/system/path
+source core/config/environment.sh
 ```
 
-This will:
-- Create required directories
-- Initialize log files
-- Set up agent registry
-- Generate initial templates
+### Multiple Instance Setup
+You can run multiple instances by using different system directories:
 
-### 6. Verify Installation
 ```bash
-python scripts/system_check.py
+# Instance A
+export WARP_SYSTEM_DIR=/mnt/host/WARP_PROJECT_A
+source core/config/environment.sh
+
+# Instance B
+export WARP_SYSTEM_DIR=/mnt/host/WARP_PROJECT_B
+source core/config/environment.sh
 ```
 
-The system check will verify:
-- Directory structure
-- File permissions
-- Python dependencies
-- Environment configuration
-- System connectivity
+## Directory Structure
 
-## Post-Installation Setup
+### Primary System Directories
+- `$SYSTEM_DIR/` - Core system
+  - `System Commands/` - Command definitions and executables
+  - `Work Logs/` - Active session logs and archives
+  - `System Logs/` - System maintenance and operational logs
+  - `Warp Rules/` - Governance and operational procedures
+  - `Current Objective/` - Active project phase data
+  - `Future Objectives/` - Queued project phases
+  - `Past Objectives/` - Completed project archives
+  - `Agent Status/` - Per-agent heartbeat and status files
+  - `Task Pool/` - Active and pending task definitions
+  - `Dependencies/` - Cross-task dependency mapping
+  - `Missing Tasks/` - Detected missing tasks awaiting addition
+  - `Promotion Queue/` - Objectives ready for promotion tracking
 
-### 1. Configure Agent Profiles
-1. Navigate to `core/agent_status/`
-2. Copy the example profile:
+### Secondary Directories
+- `$TEMPLATES_DIR/` - Template files
+- `$ARCHIVE_DIR/` - Archived files
+- `$MASTERLOG_ARCHIVE_DIR/` - Log archives
+- `$EMERGENCY_BACKUP_DIR/` - System backups
+- `$CLOUD_SYNC_DIR/` - Cloud sync staging
+- `$SIMULATION_DIR/` - Simulation workspace
+- `$REMOTE_CACHE_DIR/` - Remote backup cache
+
+## Verification
+After installation, verify the setup by running:
 ```bash
-cp AGENT_PROFILE_TEMPLATE.json my_agent_profile.json
+# Check directory structure
+ls -la "$SYSTEM_DIR"
+
+# Verify file permissions
+ls -la "$SYSTEM_LOGS_DIR"
+ls -la "$AGENT_STATUS_DIR"
+
+# Test environment configuration
+echo $SYSTEM_DIR
+echo $WARP_RULES_DIR
 ```
-3. Edit the profile with your agent's specifications
-
-### 2. Setup Logging
-1. Review logging configuration in `config/logging.yaml`
-2. Adjust log rotation and retention policies as needed
-3. Configure log paths if using custom locations
-
-### 3. Initialize Task Pool
-1. Navigate to `core/task_pool/`
-2. Set up initial task templates
-3. Configure task priority rules
-
-### 4. Configure Monitoring
-1. Review monitoring settings in `config/monitoring.yaml`
-2. Set up alert thresholds
-3. Configure notification endpoints
 
 ## Troubleshooting
 
 ### Common Issues
 
-#### Permission Errors
+1. Permission Denied
 ```bash
 # Fix directory permissions
-chmod -R u+rw agent_stack/
+sudo chown -R $USER:$USER "$SYSTEM_DIR"
+sudo chmod -R 755 "$SYSTEM_DIR"
 ```
 
-#### Python Version Conflicts
-- Ensure you're using Python 3.8+
-- Check for conflicting packages
-- Verify virtual environment activation
-
-#### Log Directory Issues
+2. Environment Variables Not Set
 ```bash
-# Create missing log directories
-mkdir -p logs/system_logs logs/work_logs
+# Verify environment setup
+env | grep WARP
+env | grep SYSTEM
 ```
 
-### Health Check
-Run the health check script to diagnose issues:
+3. Missing Directories
 ```bash
-python scripts/health_check.py
+# Recreate directory structure
+source core/config/environment.sh
+./scripts/setup_directories.sh
 ```
-
-## Security Considerations
-
-### File Permissions
-- Ensure proper file ownership
-- Set restrictive permissions on configuration files
-- Protect sensitive credentials
-
-### Network Security
-- Configure firewalls appropriately
-- Use secure communication channels
-- Implement proper authentication
-
-## Maintenance
-
-### Regular Tasks
-1. Monitor log files
-2. Check system health
-3. Update dependencies
-4. Backup configuration
-5. Clean old logs
-
-### Backup Procedures
-1. Back up configuration files
-2. Export agent registry
-3. Archive important logs
-4. Document system state
-
-## Next Steps
-- Review [Usage Guide](USAGE.md)
-- Configure [Agent Protocols](PROTOCOLS.md)
-- Set up [Monitoring](MONITORING.md)
-- Plan [Backup Strategy](BACKUP.md)
-
-## Support
-For issues and support:
-1. Check the [Troubleshooting Guide](TROUBLESHOOTING.md)
-2. Review [Known Issues](KNOWN_ISSUES.md)
-3. Submit an issue on GitHub
-4. Contact system administrators

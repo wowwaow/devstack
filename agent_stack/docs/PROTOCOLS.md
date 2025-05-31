@@ -1,335 +1,207 @@
-# AI Agent Stack Protocol Specifications
+# Warp Agent System Protocols
 
-## Overview
-This document details the protocols used for agent communication, coordination, and resource management within the AI Agent Stack system.
+## Environment Configuration Protocols
 
-## Communication Schema
+### 1. Environment Initialization
+```bash
+# Required initialization sequence for all agents
+source "$(dirname "$0")/../../core/config/environment.sh"
 
-### Message Format
+# Verify environment
+if [[ -z "$WARP_SYSTEM_DIR" ]]; then
+    echo "Error: Environment not properly initialized"
+    exit 1
+fi
+```
+
+### 2. Path Resolution
+- Always use environment variables for path resolution
+- Never hardcode system paths
+- Use path joining for subdirectories
+```python
+import os
+
+class AgentPathResolver:
+    @staticmethod
+    def get_log_path(log_name):
+        return os.path.join(os.environ['SYSTEM_LOGS_DIR'], log_name)
+    
+    @staticmethod
+    def get_agent_status_path(agent_id):
+        return os.path.join(os.environ['AGENT_STATUS_DIR'], f"{agent_id}.json")
+```
+
+## Agent Protocols
+
+### 1. Agent Registration
+```python
+def register_agent(agent_id):
+    registry_path = os.environ['AGENT_REGISTRY']
+    with open(registry_path, 'a') as f:
+        f.write(f"{agent_id},{time.time()},ACTIVE\n")
+```
+
+### 2. Heartbeat Protocol
+- Frequency: Every 2 minutes
+- Location: $HEARTBEAT_MONITOR
 ```json
 {
-  "message": {
-    "id": "unique_message_id",
-    "type": "broadcast|direct|system|emergency",
-    "priority": 1-5,
-    "sender": "agent_id",
-    "recipients": ["agent_ids"],
-    "content": {
-      "action": "command_name",
-      "parameters": {},
-      "context": {},
-      "requirements": []
-    },
-    "metadata": {
-      "timestamp": "ISO-8601",
-      "expires": "ISO-8601",
-      "retry_policy": {
-        "attempts": 3,
-        "backoff": "exponential",
-        "timeout": 300
-      }
-    }
-  }
+    "agent_id": "agent_001",
+    "timestamp": "2025-05-31T18:30:00Z",
+    "status": "ACTIVE",
+    "current_task": "task_123",
+    "progress": 65,
+    "next_heartbeat": "2025-05-31T18:32:00Z"
 }
 ```
 
-### Message Types
-1. **Broadcast Messages**
-   - System-wide announcements
-   - State updates
-   - Emergency notifications
+### 3. Task Management
+- Check task pool: $TASK_POOL_DIR
+- Update task status: $CURRENT_OBJECTIVE_DIR
+- Log missing tasks: $MISSING_TASKS_DIR
+- Monitor dependencies: $DEPENDENCIES_DIR
 
-2. **Direct Messages**
-   - Agent-to-agent communication
-   - Task handoffs
-   - Resource requests
+## File Access Protocols
 
-3. **System Messages**
-   - Health checks
-   - Configuration updates
-   - Status requests
-
-4. **Emergency Messages**
-   - Critical alerts
-   - System warnings
-   - Immediate action requirements
-
-## Task Distribution Protocol
-
-### Protocol Flow
-1. **Task Analysis**
-   ```python
-   def analyze_task(task):
-       requirements = identify_requirements(task)
-       dependencies = map_dependencies(task)
-       resources = calculate_resources(task)
-       return TaskAnalysis(requirements, dependencies, resources)
-   ```
-
-2. **Agent Evaluation**
-   ```python
-   def evaluate_agents(task_analysis):
-       available_agents = get_available_agents()
-       qualified_agents = filter_by_capabilities(available_agents, task_analysis.requirements)
-       ranked_agents = rank_by_suitability(qualified_agents, task_analysis)
-       return ranked_agents
-   ```
-
-3. **Task Assignment**
-   ```python
-   def assign_task(task, agent):
-       verify_agent_availability(agent)
-       prepare_task_handoff(task)
-       transfer_task_ownership(task, agent)
-       notify_dependent_agents(task)
-   ```
-
-### Task States
-- PENDING
-- ASSIGNED
-- IN_PROGRESS
-- COMPLETED
-- FAILED
-- REASSIGNED
-
-## Resource Sharing Protocol
-
-### Resource Management
-1. **Resource Registration**
-   ```python
-   def register_resource(resource):
-       validate_resource(resource)
-       add_to_resource_pool(resource)
-       notify_resource_availability(resource)
-   ```
-
-2. **Resource Allocation**
-   ```python
-   def allocate_resource(agent, resource_request):
-       verify_availability(resource_request)
-       lock_resource(resource_request)
-       assign_to_agent(agent, resource_request)
-       monitor_usage(agent, resource_request)
-   ```
-
-3. **Resource Release**
-   ```python
-   def release_resource(agent, resource):
-       verify_ownership(agent, resource)
-       cleanup_resource_state(resource)
-       return_to_pool(resource)
-       notify_availability(resource)
-   ```
-
-### Resource Types
-- CPU
-- Memory
-- Storage
-- Network
-- Special Hardware
-- Software Licenses
-
-## State Synchronization Protocol
-
-### State Management
-1. **State Collection**
-   ```python
-   def collect_states():
-       agent_states = get_all_agent_states()
-       task_states = get_all_task_states()
-       resource_states = get_all_resource_states()
-       return SystemState(agent_states, task_states, resource_states)
-   ```
-
-2. **Inconsistency Detection**
-   ```python
-   def detect_inconsistencies(system_state):
-       validate_state_integrity(system_state)
-       check_cross_references(system_state)
-       verify_resource_assignments(system_state)
-       return found_inconsistencies
-   ```
-
-3. **State Update**
-   ```python
-   def update_states(inconsistencies):
-       plan_updates(inconsistencies)
-       distribute_updates()
-       verify_application()
-       log_state_changes()
-   ```
-
-### Synchronization Events
-- Agent Registration/Deregistration
-- Task State Changes
-- Resource Allocation/Release
-- System Configuration Updates
-- Emergency State Changes
-
-## Conflict Resolution Protocol
-
-### Conflict Types
-1. **Resource Conflicts**
-   - Double Allocation
-   - Resource Deadlock
-   - Usage Violations
-
-2. **Task Conflicts**
-   - Dependency Cycles
-   - Priority Conflicts
-   - Timeline Conflicts
-
-3. **State Conflicts**
-   - Inconsistent Views
-   - Outdated States
-   - Conflicting Updates
-
-### Resolution Process
+### 1. Log File Access
 ```python
-def resolve_conflict(conflict):
-    conflict_type = analyze_conflict(conflict)
-    resolution_strategy = select_strategy(conflict_type)
-    execute_resolution(resolution_strategy)
-    verify_resolution()
-    update_affected_components()
+def write_log(log_type, message):
+    log_path = os.path.join(os.environ['SYSTEM_LOGS_DIR'], f"{log_type}.md")
+    with open(log_path, 'a') as f:
+        f.write(f"[{time.isoformat()}] {message}\n")
 ```
 
-### Resolution Strategies
-1. **Resource Conflicts**
-   - Priority-based Resolution
-   - Time-sharing
-   - Resource Reallocation
-   - Deadline Adjustment
-
-2. **Task Conflicts**
-   - Task Reordering
-   - Priority Adjustment
-   - Timeline Modification
-   - Dependency Resolution
-
-3. **State Conflicts**
-   - State Merging
-   - Version Selection
-   - Conflict Transformation
-   - State Regeneration
-
-## Performance Monitoring Protocol
-
-### Metrics Collection
+### 2. Status Updates
 ```python
-def collect_metrics():
-    agent_metrics = get_agent_metrics()
-    system_metrics = get_system_metrics()
-    resource_metrics = get_resource_metrics()
-    return Metrics(agent_metrics, system_metrics, resource_metrics)
+def update_status(status_type, data):
+    status_file = os.path.join(os.environ['AGENT_STATUS_DIR'], f"{status_type}.json")
+    with open(status_file, 'w') as f:
+        json.dump(data, f, indent=2)
 ```
 
-### Performance Indicators
-1. **Agent Performance**
-   - Task Completion Rate
-   - Resource Utilization
-   - Error Rate
-   - Response Time
+## Event Handling Protocols
 
-2. **System Performance**
-   - Overall Throughput
-   - Resource Efficiency
-   - Protocol Overhead
-   - State Consistency
-
-3. **Resource Performance**
-   - Utilization Rate
-   - Contention Rate
-   - Allocation Efficiency
-   - Release Timeliness
-
-## Protocol Implementation Guidelines
-
-### Best Practices
-1. **Message Handling**
-   - Validate all messages
-   - Handle timeouts gracefully
-   - Implement retry logic
-   - Log all operations
-
-2. **State Management**
-   - Maintain consistency
-   - Handle partial failures
-   - Implement rollback
-   - Version all states
-
-3. **Resource Management**
-   - Prevent deadlocks
-   - Handle resource leaks
-   - Monitor usage
-   - Implement quotas
-
-4. **Error Handling**
-   - Define error types
-   - Implement recovery
-   - Log error context
-   - Notify stakeholders
-
-### Protocol Extensions
+### 1. Task Detection Events
 ```python
-class CustomProtocol(BaseProtocol):
-    def __init__(self):
-        super().__init__()
-        self.initialize_custom_components()
-
-    def handle_message(self, message):
-        validate_message(message)
-        process_custom_logic(message)
-        update_state(message)
-        notify_completion(message)
+def handle_missing_task(task_data):
+    missing_tasks_dir = os.environ['MISSING_TASKS_DIR']
+    task_file = os.path.join(missing_tasks_dir, f"task_{int(time.time())}.json")
+    with open(task_file, 'w') as f:
+        json.dump(task_data, f, indent=2)
 ```
 
-## Security Considerations
-
-### Message Security
-1. **Authentication**
-   - Verify sender identity
-   - Validate permissions
-   - Check authorization
-   - Track access patterns
-
-2. **Encryption**
-   - Encrypt sensitive data
-   - Secure channels
-   - Manage keys
-   - Rotate credentials
-
-3. **Audit**
-   - Log operations
-   - Track changes
-   - Monitor access
-   - Alert on violations
-
-## Protocol Versioning
-
-### Version Management
+### 2. Objective Promotion Events
 ```python
-class ProtocolVersion:
-    def __init__(self, version):
-        self.version = version
-        self.features = load_features(version)
-        self.compatibility = check_compatibility(version)
-
-    def upgrade(self):
-        plan_upgrade()
-        execute_upgrade()
-        verify_upgrade()
-        update_version()
+def handle_promotion(objective_id):
+    source = os.path.join(os.environ['CURRENT_OBJECTIVE_DIR'], objective_id)
+    target = os.path.join(os.environ['PAST_OBJECTIVES_DIR'], objective_id)
+    shutil.move(source, target)
 ```
 
-### Compatibility
-- Backward Compatibility
-- Forward Compatibility
-- Version Negotiation
-- Feature Detection
+## Directory Management Protocols
 
-## Additional Resources
-- [System Architecture](SYSTEM_ARCHITECTURE.md)
-- [Command Reference](COMMANDS.md)
-- [API Documentation](API.md)
-- [Implementation Examples](EXAMPLES.md)
+### 1. Directory Creation
+```python
+def ensure_directory(dir_path):
+    os.makedirs(dir_path, exist_ok=True)
+    os.chmod(dir_path, 0o755)
+```
+
+### 2. File Management
+```python
+def create_system_file(file_path):
+    with open(file_path, 'w') as f:
+        pass
+    os.chmod(file_path, 0o644)
+```
+
+## Security Protocols
+
+### 1. Permission Management
+```python
+def set_secure_permissions():
+    for dir_var in ['SYSTEM_LOGS_DIR', 'AGENT_STATUS_DIR']:
+        dir_path = os.environ[dir_var]
+        os.chmod(dir_path, 0o755)
+        for root, dirs, files in os.walk(dir_path):
+            for d in dirs:
+                os.chmod(os.path.join(root, d), 0o755)
+            for f in files:
+                os.chmod(os.path.join(root, f), 0o644)
+```
+
+### 2. Access Control
+- Use environment variables for all path access
+- Validate file permissions before access
+- Log all permission changes
+
+## Error Handling Protocols
+
+### 1. Environment Errors
+```python
+def verify_environment():
+    required_vars = [
+        'WARP_SYSTEM_DIR',
+        'SYSTEM_LOGS_DIR',
+        'AGENT_STATUS_DIR'
+    ]
+    missing = [var for var in required_vars if not os.environ.get(var)]
+    if missing:
+        raise EnvironmentError(f"Missing required environment variables: {missing}")
+```
+
+### 2. File Access Errors
+```python
+def safe_file_access(file_path, mode='r'):
+    try:
+        with open(file_path, mode) as f:
+            return f.read()
+    except Exception as e:
+        log_error(f"File access error: {e}")
+        raise
+```
+
+## Monitoring Protocols
+
+### 1. System Health Checks
+```python
+def check_system_health():
+    status = {
+        'timestamp': time.time(),
+        'directory_status': check_directories(),
+        'agent_status': check_agents(),
+        'task_status': check_tasks()
+    }
+    update_status('system_health', status)
+```
+
+### 2. Performance Monitoring
+```python
+def monitor_performance():
+    metrics = {
+        'cpu_usage': get_cpu_usage(),
+        'memory_usage': get_memory_usage(),
+        'active_agents': count_active_agents(),
+        'pending_tasks': count_pending_tasks()
+    }
+    log_metrics(metrics)
+```
+
+## Backup Protocols
+
+### 1. System Backup
+```python
+def create_backup():
+    backup_dir = os.environ['EMERGENCY_BACKUP_DIR']
+    timestamp = time.strftime('%Y%m%d_%H%M%S')
+    backup_path = os.path.join(backup_dir, f"backup_{timestamp}")
+    shutil.copytree(os.environ['WARP_SYSTEM_DIR'], backup_path)
+```
+
+### 2. Log Rotation
+```python
+def rotate_logs():
+    log_dir = os.environ['SYSTEM_LOGS_DIR']
+    archive_dir = os.environ['MASTERLOG_ARCHIVE_DIR']
+    # Implement log rotation logic
+```

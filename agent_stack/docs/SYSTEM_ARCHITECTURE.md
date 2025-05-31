@@ -1,121 +1,178 @@
-# AI Agent Stack System Architecture
+# Warp Agent System Architecture
 
 ## System Overview
-The AI Agent Stack uses a **single consolidated rule set**, a shared template library, and a series of persistent local files + system commands to coordinate multi-agent operations with intelligent task detection and automatic objective promotion.
 
-## Directory Structure & File Hierarchy
+The Warp Agent system is designed as a flexible, portable AI agent coordination framework built around environment-based configuration and clear separation of concerns.
 
-### Core System Components
-- `agent_stack/core/`
-  - `rules/` → Governance and operational procedures
-  - `objectives/` → Active, future, and past project phases
-  - `agent_status/` → Per-agent heartbeat and status files
-  - `task_pool/` → Active and pending task definitions
-  - `dependencies/` → Cross-task and cross-objective dependency mapping
-  - `missing_tasks/` → Detected missing tasks awaiting addition
-  - `promotion_queue/` → Objectives ready for promotion tracking
+## Core Architecture Components
 
-### Critical System Files
-- **Main ruleset** → `core/rules/README.md`
-- **System documentation** → `docs/SYSTEM_ARCHITECTURE.md`
-- **Path registry** → `core/rules/PATHS.md`
-- **Agent registry** → `core/agent_status/AGENT_REGISTRY.csv`
-- **Missing task log** → `logs/system_logs/MISSING_TASKS_LOG.md`
-- **Objective promotion log** → `logs/system_logs/OBJECTIVE_PROMOTION_LOG.md`
-- **Agent timeout log** → `logs/system_logs/AGENT_TIMEOUT_LOG.md`
-- **Task reassignment log** → `logs/system_logs/TASK_REASSIGNMENT_LOG.md`
-- **Agent heartbeat monitor** → `core/agent_status/HEARTBEAT_MONITOR.json`
+### 1. Environment Configuration Layer
+```
+core/config/environment.sh
+```
+- Defines all system paths and directories
+- Enables system portability through environment variables
+- Provides backward compatibility with legacy configurations
+- Supports multiple instance deployment
 
-## Agent Session Protocol
+### 2. Directory Structure
+The system uses a hierarchical directory structure defined by environment variables:
 
-### Session Startup Sequence
-1. **Identity Verification**
-   - Confirm agent identity and session timestamp
-   - Log session start in AGENT_REGISTRY.csv
-   - Check for existing agent conflicts
+```
+$WARP_HOST_DIR/               # Base host directory
+└── $WARP_SYSTEM_DIR/        # System directory (WARP_CURRENT)
+    ├── System Commands/     # Command definitions
+    ├── Work Logs/          # Session logs
+    ├── System Logs/        # Operational logs
+    ├── Warp Rules/         # System rules
+    ├── Current Objective/  # Active tasks
+    ├── Future Objectives/  # Queued objectives
+    ├── Past Objectives/    # Completed work
+    ├── Agent Status/       # Agent monitoring
+    ├── Task Pool/          # Task definitions
+    ├── Dependencies/       # Task dependencies
+    ├── Missing Tasks/      # Task detection
+    └── Promotion Queue/    # Objective promotion
+```
 
-2. **Rule Set Validation**
-   - Read primary ruleset
-   - Verify rule version compatibility
-   - Cross-reference system architecture
+### 3. Core Subsystems
 
-3. **System Health Check**
-   - Validate directory structure
-   - Check file permissions
-   - Verify template availability
+#### Agent Management (`core/agents/`)
+- Agent lifecycle management
+- Task assignment and coordination
+- Agent status monitoring
+- Heartbeat tracking
 
-4. **Missing Task Detection**
-   - Scan current objective for gaps
-   - Analyze dependencies
-   - Auto-generate missing tasks
-   - Update task pool
+#### Event System (`core/events/`)
+- System event processing
+- Inter-agent communication
+- Event logging and tracking
+- State change notifications
 
-5. **Objective Completion Check**
-   - Evaluate objective status
-   - Execute promotion if complete
-   - Archive completed objectives
-   - Initialize new objectives
+#### Logging Infrastructure (`core/logging/`)
+- Centralized logging
+- Log rotation and archival
+- Activity tracking
+- System diagnostics
 
-## Core Commands
+#### Monitoring System (`core/monitoring/`)
+- Agent health monitoring
+- System performance tracking
+- Resource utilization
+- Anomaly detection
 
-### DETECT_MISSING_TASKS
-- **Purpose:** AI-driven task detection and addition
-- **Syntax:** `DETECT_MISSING_TASKS [objective_name] [scan_depth] [auto_add]`
-- **Features:**
-  - Pattern analysis
-  - Dependency gap detection
-  - Best practice scanning
-  - Quality assurance verification
-  - Auto-addition capability
+#### Task Management (`core/tasks/`)
+- Task definition and tracking
+- Dependency management
+- Missing task detection
+- Task state management
 
-### MONITOR_AGENTS
-- **Purpose:** Agent heartbeat monitoring
-- **Syntax:** `MONITOR_AGENTS [scan_interval] [timeout_threshold] [auto_reassign]`
-- **Features:**
-  - Continuous heartbeat tracking
-  - Automatic timeout detection
-  - Task state preservation
-  - Intelligent reassignment
+## System Integration
 
-### HEARTBEAT
-- **Purpose:** Agent lifecycle management
-- **Syntax:** `HEARTBEAT [agent_id] [status] [current_task] [progress]`
-- **Intervals:**
-  - Soft Timeout: 5 minutes
-  - Hard Timeout: 10 minutes
-  - Critical Timeout: 15 minutes
+### Environment Variable Integration
+The system uses environment variables for configuration, enabling:
+- Portable deployments
+- Multiple instance support
+- Custom path configurations
+- Development/production environment separation
 
-## Agent Coordination Protocols
+Example:
+```bash
+# Custom deployment
+export WARP_HOST_DIR=/custom/path
+export WARP_SYSTEM_DIR=/custom/path/instance1
+source core/config/environment.sh
 
-### Task Distribution Protocol
-1. Analyze requirements
-2. Evaluate agent capabilities
-3. Calculate optimal distribution
-4. Assign tasks
-5. Monitor progress
-6. Handle completion
+# All subsystems automatically use updated paths
+agent_status_file="$AGENT_STATUS_DIR/status.json"
+log_file="$SYSTEM_LOGS_DIR/system.log"
+```
 
-### Resource Sharing Protocol
-1. Register requirements
-2. Check availability
-3. Allocate resources
-4. Monitor usage
-5. Handle conflicts
-6. Release resources
+### Directory Structure Integration
+```python
+# Python example of system integration
+class WarpSystem:
+    def __init__(self):
+        self.system_dir = os.environ['SYSTEM_DIR']
+        self.logs_dir = os.environ['SYSTEM_LOGS_DIR']
+        self.agent_dir = os.environ['AGENT_STATUS_DIR']
+        
+    def initialize_directories(self):
+        """Create required system directories"""
+        os.makedirs(self.logs_dir, exist_ok=True)
+        os.makedirs(self.agent_dir, exist_ok=True)
+        
+    def get_log_path(self, log_name):
+        """Get absolute path for a log file"""
+        return os.path.join(self.logs_dir, log_name)
+```
 
-### State Synchronization Protocol
-1. Collect agent states
-2. Identify inconsistencies
-3. Calculate updates
-4. Distribute changes
-5. Verify consistency
-6. Log results
+## Deployment Configurations
 
-### Performance Monitoring
-- Communication latency tracking
-- Resource utilization metrics
-- Task completion analysis
-- Collaboration efficiency
-- System synchronization overhead
+### Single Instance
+```bash
+export WARP_HOST_DIR=/mnt/host
+export WARP_SYSTEM_DIR=$WARP_HOST_DIR/WARP_CURRENT
+source core/config/environment.sh
+```
 
-[Additional protocol documentation continues...]
+### Multiple Instances
+```bash
+# Development instance
+export WARP_SYSTEM_DIR=/mnt/host/warp_dev
+source core/config/environment.sh
+
+# Production instance
+export WARP_SYSTEM_DIR=/mnt/host/warp_prod
+source core/config/environment.sh
+```
+
+### Cloud Deployment
+```bash
+# AWS deployment example
+export WARP_HOST_DIR=/mnt/efs/warp
+export WARP_SYSTEM_DIR=/mnt/efs/warp/production
+source core/config/environment.sh
+```
+
+## Security Considerations
+
+### File Permissions
+- System directories: 755 (drwxr-xr-x)
+- Configuration files: 644 (rw-r--r--)
+- Executable scripts: 755 (rwxr-xr-x)
+
+### Environment Security
+- Environment variables are local to each process
+- No sensitive data in environment variables
+- Separate configuration for sensitive data
+
+## System Requirements
+
+### Minimum Requirements
+- Linux/Unix environment
+- Bash shell
+- Python 3.8+
+- 1GB RAM
+- 10GB storage
+
+### Recommended Requirements
+- 4GB+ RAM
+- 50GB+ storage
+- SSD storage for logs
+- Multi-core processor
+
+## Future Considerations
+
+### Scalability
+- Container support
+- Distributed system support
+- Cloud-native deployment
+- Kubernetes integration
+
+### Monitoring
+- Enhanced metrics collection
+- Performance monitoring
+- Resource utilization tracking
+- Alert system integration
+
