@@ -11,12 +11,15 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Source the core system configuration
 source "$SCRIPT_DIR/config/environment.sh"
 
-# Source all component modules
-for module in "$SCRIPT_DIR"/system/*.sh; do
-    if [[ -f "$module" ]]; then
-        source "$module"
-    fi
-done
+# Source the component modules
+source "$SCRIPT_DIR/system/permissions.sh"
+source "$SCRIPT_DIR/system/logging.sh"
+source "$SCRIPT_DIR/system/agent_management.sh"
+source "$SCRIPT_DIR/system/task_management.sh"
+source "$SCRIPT_DIR/system/tool_management.sh"
+source "$SCRIPT_DIR/system/monitoring.sh"
+source "$SCRIPT_DIR/system/backup.sh"
+source "$SCRIPT_DIR/system/operations.sh"
 
 # Main command dispatcher
 main() {
@@ -115,44 +118,3 @@ ENVIRONMENT VARIABLES:
     WARP_GROUP         - System group (default: ubuntu)
 
 For more information, see the documentation in the Warp_Rules directory.
-EOF
-            ;;
-        *)
-            log_error "Unknown command: $1"
-            $0 help
-            exit 1
-            ;;
-    esac
-}
-
-# Execute main function with all arguments
-main "$@"
-
-#!/bin/bash
-# Dynamic Multi-Agent AI System (WARP) Implementation
-# Enhanced with environment variables for flexibility and portability
-
-set -euo pipefail
-
-# Source the core system configuration
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/config/environment.sh"
-
-# Source the component modules
-source "$SCRIPT_DIR/system/permissions.sh"
-source "$SCRIPT_DIR/system/logging.sh"
-source "$SCRIPT_DIR/system/agent_management.sh"
-source "$SCRIPT_DIR/system/task_management.sh"
-source "$SCRIPT_DIR/system/tool_management.sh"
-source "$SCRIPT_DIR/system/monitoring.sh"
-source "$SCRIPT_DIR/system/backup.sh"
-
-# Import the main system operations
-source "$SCRIPT_DIR/system/operations.sh"
-
-# Execute the CLI interface
-source "$SCRIPT_DIR/system/cli.sh"
-
-# Run the main function with all arguments
-main "$@"
-

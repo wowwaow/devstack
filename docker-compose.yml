@@ -1,0 +1,83 @@
+version: '3.8'
+
+name: devstack
+
+services:
+  nginx:
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./services/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./services/nginx/ssl:/etc/nginx/ssl:ro
+      - ./www:/var/www:ro
+    depends_on:
+      - php
+    networks:
+      - devstack
+
+  php:
+    build:
+      context: ./services/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./www:/var/www:rw
+      - ./services/php/conf.d:/usr/local/etc/php/conf.d:ro
+    environment:
+      - PHP_IDE_CONFIG=serverName=devstack
+    networks:
+      - devstack
+
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./services/mysql/conf.d:/etc/mysql/conf.d:ro
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    networks:
+      - devstack
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    profiles:
+      - redis
+    networks:
+      - devstack
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    profiles:
+      - mail
+    networks:
+      - devstack
+
+networks:
+  devstack:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  redis_data:
+

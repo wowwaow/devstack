@@ -1,14 +1,11 @@
-# AGENT[github_setup_agent]: Repository visibility has been set to public. Anyone can now access, clone, and contribute to the project.
-# AGENT[documentation_agent]: Enhanced README with status badges, detailed usage examples, architecture diagram, and comprehensive documentation sections.
-# AGENT[github_setup_agent]: Repository has been successfully made public on GitHub. The comment system is now integrated with version control.
-# AGENT[test_agent]: This is a test comment showing how agents can dynamically add insights
+# AGENT[docker_setup_agent]: Added comprehensive Docker-based development environment with Nginx, PHP-FPM, MySQL, Redis, and MailHog support. Includes SSL, Xdebug, and proper security configurations.
 # AI Agent Stack
 
-![Build Status](https://img.shields.io/github/workflow/status/wowwaow/devstack/CI)
-![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
-![Last Commit](https://img.shields.io/github/last-commit/wowwaow/devstack)
-[![Code Coverage](https://img.shields.io/codecov/c/github/wowwaow/devstack)](https://codecov.io/gh/wowwaow/devstack)
+[![Build Status](https://github.com/wowwaow/devstack/actions/workflows/ci.yml/badge.svg)](https://github.com/wowwaow/devstack/actions)
+[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Last Commit](https://img.shields.io/github/last-commit/wowwaow/devstack)](https://github.com/wowwaow/devstack/commits)
+[![Code Coverage](https://codecov.io/gh/wowwaow/devstack/branch/main/graph/badge.svg)](https://codecov.io/gh/wowwaow/devstack)
 
 A modular AI orchestration framework enabling scalable, fault-tolerant, and intelligent task execution across distributed systems. The AI Agent Stack revolutionizes multi-agent coordination through intelligent task detection, automatic objective promotion, and robust resource management.
 
@@ -183,10 +180,3 @@ Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software...
 ```
 
-## Demo
-
-![AI Agent Stack Demo](docs/images/demo.gif)
-
-_Above: AI agents coordinating to process a complex task pipeline_
-
-For more demos and examples, visit our [demo gallery](docs/DEMOS.md).
