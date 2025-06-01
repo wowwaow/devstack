@@ -1,0 +1,32 @@
+{
+  "messages": [
+    {
+      "id": "test_1748786408",
+      "sender": "system",
+      "recipient": "Tester",
+      "task_type": "test",
+      "payload": {
+        "test": true
+      },
+      "timestamp": "2025-06-01T14:00:08Z",
+      "status": "pending"
+    },
+    {
+      "id": "testing_1748786258",
+      "sender": "system",
+      "recipient": "Tester",
+      "task_type": "test_execution",
+      "payload": {
+        "phase": "testing",
+        "priority": 2,
+        "task": [
+          "run_system_tests",
+          "verify_agent_communication",
+          "validate_message_system"
+        ]
+      },
+      "timestamp": "2025-06-01T13:57:38Z",
+      "status": "pending"
+    }
+  ]
+}
