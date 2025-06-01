@@ -151,21 +151,21 @@ View our [CI/CD workflows](.github/workflows) for details.
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on:
 
-- Code Style and Standards
-- Pull Request Process
-- Issue Templates
-- Development Setup
-- Testing Requirements
-
-### Getting Started with Development
+### Contributing Guidelines
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Run tests: `python -m pytest`
-5. Submit a pull request
+4. Submit a pull request
+
+Please follow our [coding standards](docs/coding_standards.md) and [documentation guidelines](docs/documentation_guidelines.md).
+
+### Development Setup
+1. Set up development environment
+2. Install development dependencies
+3. Run tests before submitting
+
 
 ## License
 
