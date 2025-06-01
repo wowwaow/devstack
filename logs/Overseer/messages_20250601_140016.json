@@ -1,0 +1,32 @@
+{
+  "messages": [
+    {
+      "id": "test_1748786408",
+      "sender": "system",
+      "recipient": "Overseer",
+      "task_type": "test",
+      "payload": {
+        "test": true
+      },
+      "timestamp": "2025-06-01T14:00:08Z",
+      "status": "pending"
+    },
+    {
+      "id": "system_check_1748786258",
+      "sender": "system",
+      "recipient": "Overseer",
+      "task_type": "system_validation",
+      "payload": {
+        "phase": "system_check",
+        "priority": 1,
+        "task": [
+          "validate_directories",
+          "check_agent_status",
+          "verify_message_system"
+        ]
+      },
+      "timestamp": "2025-06-01T13:57:38Z",
+      "status": "pending"
+    }
+  ]
+}
