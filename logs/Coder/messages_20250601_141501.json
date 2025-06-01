@@ -1,0 +1,15 @@
+{
+  "messages": [{
+    "id": "code_review_1748787037",
+    "sender": "system",
+    "recipient": "Coder",
+    "task_type": "code_validation",
+    "payload": {
+      "phase": "code_review",
+      "priority": 2,
+      "task": ["check_code_integrity","verify_implementations","identify_tech_debt"]
+    },
+    "timestamp": "2025-06-01T14:10:37Z",
+    "status": "pending"
+  }]
+}

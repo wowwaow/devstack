@@ -1,0 +1,15 @@
+{
+  "messages": [{
+    "id": "testing_1748787037",
+    "sender": "system",
+    "recipient": "Tester",
+    "task_type": "test_execution",
+    "payload": {
+      "phase": "testing",
+      "priority": 2,
+      "task": ["run_system_tests","verify_agent_communication","validate_message_system"]
+    },
+    "timestamp": "2025-06-01T14:10:37Z",
+    "status": "pending"
+  }]
+}
